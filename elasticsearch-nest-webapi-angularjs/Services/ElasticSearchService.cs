@@ -35,7 +35,7 @@ namespace elasticsearch_nest_webapi_angularjs.Services
                 Page = page,
                 Results = result.Documents,
                 ElapsedMilliseconds = result.Took,
-                AggregationsByTags = result.Aggs.Terms("by_tags").Buckets.ToDictionary(x => x.Key, y => y.DocCount.GetValueOrDefault(0))
+                AggregationsByTags = result.Aggregations.Terms("by_tags").Buckets.ToDictionary(x => x.Key, y => y.DocCount.GetValueOrDefault(0))
             };
         }
 
@@ -71,28 +71,28 @@ namespace elasticsearch_nest_webapi_angularjs.Services
                 Page = page,
                 Results = result.Documents,
                 ElapsedMilliseconds = result.Took,
-                AggregationsByTags = result.Aggs.Terms("by_tags").Buckets.ToDictionary(x => x.Key, y => y.DocCount.GetValueOrDefault(0))
+                AggregationsByTags = result.Aggregations.Terms("by_tags").Buckets.ToDictionary(x => x.Key, y => y.DocCount.GetValueOrDefault(0))
             };
         }
 
         public IEnumerable<string> Autocomplete(string query)
         {
-            var result = client.Suggest<Post>(x => x.Completion("tag-suggestions", c => c.Text(query)
+            var result = client.Search<Post>(s=> s.Suggest(x => x.Completion("tag-suggestions", c => c.Prefix(query)
                 .Field(f => f.Suggest)
-                .Size(6)));
+                .Size(6))));
 
-            return result.Suggestions["tag-suggestions"].SelectMany(x => x.Options).Select(y => y.Text);
+            return result.Suggest["tag-suggestions"].SelectMany(x => x.Options).Select(y => y.Text);
         }
 
         public IEnumerable<string> Suggest(string query)
         {
-            var result = client.Suggest<Post>(x => x.Term("post-suggestions", t => t.Text(query)
+            var result = client.Search<Post>(s => s.Suggest(x => x.Term("post-suggestions", t => t.Text(query)
                 .Field(f => f.Body)
                 .Field(f => f.Title)
                 .Field(f => f.Tags)
-                .Size(6)));
+                .Size(6))));
 
-            return result.Suggestions["post-suggestions"].SelectMany(x => x.Options).Select(y => y.Text);
+            return result.Suggest["post-suggestions"].SelectMany(x => x.Options).Select(y => y.Text);
         }
 
         public SearchResult<Post> FindMoreLikeThis(string id, int pageSize)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Nest;
 
 namespace elasticsearch_nest_webapi_angularjs.Models
@@ -18,7 +19,7 @@ namespace elasticsearch_nest_webapi_angularjs.Models
         
         public string Title { get; set; }
 
-        [String(Index = FieldIndexOption.NotAnalyzed)]
+        [Keyword()]//Index = FieldIndexOption.NotAnalyzed
         public IEnumerable<string> Tags { get; set; }
 
         [Completion]
