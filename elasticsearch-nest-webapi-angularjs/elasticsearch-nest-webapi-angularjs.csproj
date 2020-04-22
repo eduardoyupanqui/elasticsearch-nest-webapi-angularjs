@@ -107,6 +107,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\site.css" />
     <Content Include="data\posts.xml" />
+    <Content Include="index.html" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\ui-bootstrap-custom-tpls-0.14.3.min.js" />

@@ -86,13 +86,13 @@ namespace elasticsearch_nest_webapi_angularjs.Services
 
         public IEnumerable<string> Suggest(string query)
         {
-            var result = client.Search<Post>(s => s.Suggest(x => x.Term("post-suggestions", t => t.Text(query)
-                .Field(f => f.Body)
-                .Field(f => f.Title)
-                .Field(f => f.Tags)
-                .Size(6))));
+            var result = client.Search<Post>(s => s.Suggest(x => x
+                .Term("post-suggestions-title", t => t.Text(query).Field(f => f.Title).Size(6))
+                .Term("post-suggestions-body", t => t.Text(query).Field(f => f.Body).Size(6))
+                .Term("post-suggestions-tags", t => t.Text(query).Field(f => f.Tags).Size(6))
+            ));
 
-            return result.Suggest["post-suggestions"].SelectMany(x => x.Options).Select(y => y.Text);
+            return result.Suggest.Values.SelectMany(x => x).SelectMany(x => x.Options).Select(y => y.Text);
         }
 
         public SearchResult<Post> FindMoreLikeThis(string id, int pageSize)

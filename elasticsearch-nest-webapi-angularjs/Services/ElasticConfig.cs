@@ -21,6 +21,9 @@ namespace elasticsearch_nest_webapi_angularjs.Services
             var node = new Uri("http://localhost:9200");
             var settings = new ConnectionSettings(node);
             settings.DefaultIndex(IndexName);
+#if DEBUG
+            settings.DisableDirectStreaming();
+#endif
             return new ElasticClient(settings);
         }
     }
